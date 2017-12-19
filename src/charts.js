@@ -52,9 +52,9 @@
           }
           else {
             $.ajax({url: "https://data.cms.gov/resource/4hzz-sw77.json?npi=" + id,  async: false, success: function(data){
-              dataEntities.push(data[0].nppes_provider_first_name + " " + data[0].nppes_provider_last_org_name);
+              dataEntities.push(getFirstName(data) + " " + getLastName(data));
               xAxisLabels = addXAxisLabels(xAxisLabels, data, xAxis);
-             
+             console.log(data);
               map[id] = data;
               result.data = data;
             }});
@@ -66,7 +66,7 @@
         // add data for doctors to labels
         ids.forEach(function(id) {
           const theData = map[id];
-          const name = theData[0].nppes_provider_first_name + " " + theData[0].nppes_provider_last_org_name;
+          const name = getFirstName(theData) + " " + getLastName(theData);
           
           chart.options.title.push(name);
           xAxisLabels[0].push(name);
@@ -196,6 +196,31 @@
         chart.draw(data, google.charts.Bar.convertOptions(options));
       }
 
+      function getFirstName(data) {
+        var firstName = '';
+        for(var i = 0; i < data.length; i++) {
+          if(data[i].nppes_provider_first_name != null) {
+            firstName = data[i].nppes_provider_first_name;
+            break;
+          }
+        }
+        if(firstName == '') {
+          firstName = "N/A";
+        }
+        return firstName;
+      }
+
+      function getLastName(data) {
+        var lastName = '';
+        for(var i = 0; i < data.length; i++) {
+          if(data[i].nppes_provider_last_org_name != null) {
+            lastName = data[i].nppes_provider_last_org_name;
+            break;
+          }
+        }
+
+        return lastName;
+      }
       function titleToString(title) {
         var finalTitle = "";
 

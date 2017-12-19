@@ -80,7 +80,7 @@ var charts = [
 		},
 		xAxis: {
 			type: 'string',
-			data: 'hcpcs_code',
+			data: 'hcpcs_description',
 			label: 'hcpcs description'
 		}
 	},

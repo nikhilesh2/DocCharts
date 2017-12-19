@@ -78,8 +78,9 @@
           
 
               if(xAxisLabels[i][0] == dataPoint[xAxis.data] && count == 0)  {
-                const yData = yAxis.type === 'number' ? parseInt(dataPoint[yAxis.data]) : dataPoint[yAxis.data];
-
+                const rawData = getTotalMedicarePayment(dataPoint);
+                const yData = yAxis.type === 'number' ? parseInt(rawData) : rawData;
+                // const yData
                 xAxisLabels[i].push(yData);
                 count++;
                 found = true;
@@ -179,11 +180,13 @@
           "legend": 'none', 
           "colors": ['#2EBCD2', '#FD797E', '#FECD61', '#3EA3E8', '#FEE5AF', '#51C0BF'],
           vAxis: {
-            title: chart.yAxis.label
+            title: chart.yAxis.label,
+            format: chart.yAxis.format == 'dollar' ? '$#,###' : '',
           },
           hAxis: {
             title: chart.xAxis.label,
-            textStyle: chart.options.hAxis.textStyle
+            textStyle: chart.options.hAxis.textStyle,
+            format: chart.xAxis.format == 'dollar' ? '$#,###' : '',
           }
         }
 
@@ -194,6 +197,14 @@
 
         var chart =  new google.charts.Bar(document.getElementById(chart.id));
         chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+
+
+
+
+      function getTotalMedicarePayment(dataPoint) {
+        console.log("IT IS " + Math.round(dataPoint.average_medicare_payment_amt * dataPoint.bene_day_srvc_cnt));
+        return Math.round(dataPoint.average_medicare_payment_amt * dataPoint.bene_day_srvc_cnt);
       }
 
       function getFirstName(data) {

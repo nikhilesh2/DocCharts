@@ -1,4 +1,4 @@
-# DocCharts
+# Docharts
 
 ## Usuage
 #### To implement the Dochart widget to your site, add the following link to your iFrame element. 

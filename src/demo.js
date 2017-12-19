@@ -75,6 +75,7 @@ var charts = [
 		},
 		yAxis: {
 			type: 'number',
+			format: 'dollar',
 			data: 'average_medicare_payment_amt',
 			label: 'medicare payment'
 		},

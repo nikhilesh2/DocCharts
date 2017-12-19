@@ -54,7 +54,7 @@
             $.ajax({url: "https://data.cms.gov/resource/4hzz-sw77.json?npi=" + id,  async: false, success: function(data){
               dataEntities.push(getFirstName(data) + " " + getLastName(data));
               xAxisLabels = addXAxisLabels(xAxisLabels, data, xAxis);
-             console.log(data);
+
               map[id] = data;
               result.data = data;
             }});
@@ -92,7 +92,7 @@
      
           } 
         });
-        console.log("sdfsdf " + JSON.stringify(xAxisLabels));
+       
         result.rows = xAxisLabels;
         
         return result;

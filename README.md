@@ -12,7 +12,7 @@
 [Multiple npi numbers](http://docharts.niksingh.net/?npi=1518929637,1760466460)
 
 
-## Upcoming
+## TODO
 * Add default chart congifurations
 * Implement attribute modifications for more personalized charts
 * Parameter assignments for chart specs

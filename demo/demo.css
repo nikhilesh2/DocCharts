@@ -1,0 +1,100 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+html {
+	background: #E9F0F5;
+}
+p {
+	font-family: 'open sans';
+}
+.column {
+	display: flex;
+  	flex-direction: column;
+  	flex-flow: column wrap;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  flex: 1;
+}
+header {
+	position: absolute;
+	width: 100%;
+  	height: 500px;
+  	text-align: center;
+  	/*background: #303e49;*/
+  	background: #329ACD;
+}
+.headerText > h1 {
+	color: white;
+	font-family: 'open sans';
+	font-size: 3.5em;
+	margin: 0 !important;
+}
+.headerText > h2 {
+	color: #798794;
+	font-family: 'calibri';
+	font-size: 1em;
+	
+	margin: 0;
+}
+.headerText > h3 {
+	color: white;
+	font-family: 'open sans';
+	font-weight: 300;
+	font-size: 1.5em;
+	
+	margin: 0;
+}
+.headerText {
+	position: relative;
+	top: 50px;
+}
+
+.flex-container {
+
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+	background: white;
+	position: relative;
+	top: 275px;
+	padding-top: 50;
+	padding-left: 25;
+	padding-right: 25;
+	width: 60%;
+	
+	margin: 0 auto;
+}
+
+.chartContainer {
+	position: relative;
+	width: 60%;
+	/*background: #D8E4ED;*/
+	margin: 0 auto;
+	
+	
+
+}
+#chart_div, #chart_div2 {
+	position: relative;
+	width: 100%;
+
+}
+.button {
+	position: relative;
+	line-height: 50px;
+	font-family: 'calibri';
+	color: white;
+	display: block;
+	margin: 0 auto;
+	top: 100px;
+	width: 150px;
+	height: 50px;
+	border-radius: 5px;
+	background: #1FBCD3;
+	font-size: 18px;
+
+}

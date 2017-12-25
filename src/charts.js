@@ -1,8 +1,8 @@
       const map = {};
       
       const xDataMap = {};
-      // const desiredValues = ['99211','99212','99213','99214','99215'];
-      const desiredValues = ['99201','99202','99203','99204','99205'];
+      const desiredValues = ['99211','99212','99213','99214','99215'];
+      // const desiredValues = ['99201','99202','99203','99204','99205'];
       
       google.charts.load('current', {'packages':['bar']});
       google.charts.setOnLoadCallback(createCharts);

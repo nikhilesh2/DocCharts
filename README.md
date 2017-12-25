@@ -9,7 +9,7 @@
 
 [Single npi number](http://docharts.niksingh.net/?npi=1366445108)
 
-[Multiple npi numbers](http://docharts.niksingh.net/?npi=1518929637,1760466460)
+[Multiple npi numbers](http://docharts.niksingh.net/?npi=1174590681,1932282936,1518929637,1942290853)
 
 
 ## TODO

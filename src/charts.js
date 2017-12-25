@@ -1,13 +1,10 @@
-      // 1477556579 - name undefined
-
       const map = {};
+      
       const xDataMap = {};
-      var theData = "";
-      // Load the Visualization API and the piechart package.
-      // google.charts.load('current', {'packages':['corechart']});
+      // const desiredValues = ['99211','99212','99213','99214','99215'];
+      const desiredValues = ['99201','99202','99203','99204','99205'];
+      
       google.charts.load('current', {'packages':['bar']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(createCharts);
 
       // 1518929637
@@ -24,9 +21,8 @@
 
 
             const dataObj = retrieveAggregateData(charts[i]);
-           
             // charts[i].options.title = dataObj.data[0].nppes_provider_first_name + " " + dataObj.data[0].nppes_provider_last_org_name;
-            drawChart(charts[i], dataObj.rows);
+            drawChart(charts[i], dataObj.pct_rows);
           }
         }
       }
@@ -36,6 +32,7 @@
       function retrieveAggregateData(chart) {
         var rows = [];
 
+        const doctorData = {};
         const result = {};
         const ids = chart.doctor_ids;
 
@@ -43,8 +40,10 @@
         const yAxis = chart.yAxis;
 
         const dataEntities = [];
+        
         var xAxisLabels = [];
         xAxisLabels.push([yAxis.label]); // leave space doctor list
+        
         ids.forEach(function(id) {
           if(map[id] != null) {
             data = map[id];
@@ -68,9 +67,9 @@
           const theData = map[id];
           const name = getFirstName(theData) + " " + getLastName(theData);
           
-          chart.options.title.push(name);
-          xAxisLabels[0].push(name);
-          
+          doctorData[id] = {};
+          doctorData[id].sum = 0;
+             
           var found = false;
           for(var i = 1; i < xAxisLabels.length; i++) {
             var count = 0;
@@ -80,8 +79,10 @@
               if(xAxisLabels[i][0] == dataPoint[xAxis.data] && count == 0)  {
                 const rawData = getTotalMedicarePayment(dataPoint);
                 const yData = yAxis.type === 'number' ? parseInt(rawData) : rawData;
-                // const yData
+
                 xAxisLabels[i].push(yData);
+                doctorData[id].sum += yData;
+
                 count++;
                 found = true;
                 
@@ -91,25 +92,45 @@
             found = false;
             count = 0;
      
-          } 
+          }
+          xAxisLabels[0].push(name + ' ($' + doctorData[id].sum.toLocaleString() + ')');
+          chart.options.title.push(name);
+
         });
        
-        result.rows = xAxisLabels;
-        
+        var pct_rows = JSON.parse(JSON.stringify(xAxisLabels));
+        var counter = 1;
+        ids.forEach(function(id) {
+          var sum = doctorData[id].sum;
+          for(var i = 1; i < pct_rows.length; i++) {
+            pct_rows[i][counter] =  (pct_rows[i][counter] / sum) * 100;
+          }
+          counter++;
+        });
+        // console.log("amt rows are " + JSON.stringify(xAxisLabels));
+        // console.log("pct rows are " + JSON.stringify(pct_rows));
+
+        result.amt_rows = sort2D(xAxisLabels);
+        console.log(JSON.stringify(xAxisLabels));
+        // result.amt_rows = xAxisLabels;
+        result.pct_rows = pct_rows;
+        // result.pct_rows = convertToPercentages(xAxisLabels, doctorData);
+
         return result;
        
       }
 
+  
      function addXAxisLabels(xAxisLabels, data, xAxis) {
-         for(var i = 0; i < data.length; i++) {
+        for(var i = 0; i < data.length; i++) {
           const xData = xAxis.type === 'number' ? parseInt(data[i][xAxis.data]) : data[i][xAxis.data];
 
           var text = xData.split(',');
+          if(!contains(xData, xAxisLabels) && contains(xData, desiredValues))  xAxisLabels.push([xData]);
 
-          if(!contains(xData, xAxisLabels))  xAxisLabels.push([xData]);
+        }
 
-          }
-
+        xAxisLabels = [xAxisLabels[0]].concat(xAxisLabels.slice(1).sort());
         return xAxisLabels;
       }
 
@@ -119,32 +140,6 @@
           if(entry == dataPoint) contains = true;
         });
         return contains;
-      }
-      function retrieveData(chart) {
-        var rows = [];
-        const result = {};
-        const id = chart.doctor_ids[0];
-        const xAxis = chart.xAxis;
-        const yAxis = chart.yAxis;
-
-        if(map[id] != null) {
-          data = map[id];
-          rows = loopData(data, xAxis, yAxis);
-        }
-        else {
-          $.ajax({url: "https://data.cms.gov/resource/4hzz-sw77.json?npi=" + id,  async: false, success: function(data){
-            rows = loopData(data, xAxis, yAxis);
-            map[id] = data;
-            result.data = data;
-            
-            
-          }});
-
-        }
-        result.rows = rows;
-       
-        return result;
-       
       }
 
       function loopData(data, xAxis, yAxis) {
@@ -181,12 +176,13 @@
           "colors": ['#2EBCD2', '#FD797E', '#FECD61', '#3EA3E8', '#FEE5AF', '#51C0BF'],
           vAxis: {
             title: chart.yAxis.label,
-            format: chart.yAxis.format == 'dollar' ? '$#,###' : '',
+            // format: chart.yAxis.format == 'dollar' ? '$#,###' : '',
+            format: '#' + "'%'"
           },
           hAxis: {
             title: chart.xAxis.label,
             textStyle: chart.options.hAxis.textStyle,
-            format: chart.xAxis.format == 'dollar' ? '$#,###' : '',
+            // format: chart.xAxis.format == 'dollar' ? '$#,###' : '',
           }
         }
 
@@ -203,7 +199,6 @@
 
 
       function getTotalMedicarePayment(dataPoint) {
-        console.log("IT IS " + Math.round(dataPoint.average_medicare_payment_amt * dataPoint.bene_day_srvc_cnt));
         return Math.round(dataPoint.average_medicare_payment_amt * dataPoint.bene_day_srvc_cnt);
       }
 
